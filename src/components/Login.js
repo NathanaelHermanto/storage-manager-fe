@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -9,17 +10,31 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme =  createTheme();
 
+const loginUser = async (credentials) => {
+    return fetch('http://localhost:5001/api/items/login/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(credentials)
+    })
+   .then(data => data.json())
+}
 
-const Login = () => {
-    const handleSubmit = (event) => {
+const Login = ( {setToken} ) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         
         const username = data.get('username');
         const password = data.get('password');
 
-        console.log(username, password);
+        const token = await loginUser({
+            username,
+            password
+        });
 
+        setToken(token);
       };
 
       const LoginPage = () =>{
@@ -80,5 +95,9 @@ const Login = () => {
       );
       
 }
+
+Login.propTypes = {
+    setToken: PropTypes.func.isRequired
+  }
 
 export default Login;

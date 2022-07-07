@@ -1,15 +1,16 @@
 import React from 'react';
 import { Routes as RouterLink, Route } from "react-router-dom";
-import Login from './Login';
+import Dashboard from './Dashboard';
 
 const Routes = () => {
-  return (
-    <>
-        <RouterLink>
-            <Route exact path='/' element={<Login/>}/>
-        </RouterLink>
-    </>
-  )
+
+    return (
+        <>
+            <RouterLink>
+                <Route exact path='/' element={<Dashboard/>}/>
+            </RouterLink>
+        </>
+    )
 }
 
 export default Routes;
