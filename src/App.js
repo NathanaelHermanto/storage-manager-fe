@@ -10,7 +10,6 @@ function App() {
       return <Login setToken={setToken} />
   }
 
-
   return (
     <>
       <Router>
