@@ -6,8 +6,8 @@ import useToken from "./components/useToken";
 function App() {
   const { setToken, token } = useToken();
 
-  if(!token) {
-      return <Login setToken={setToken} />
+  if(token !== '0') {
+    return <Login setToken={setToken} />
   }
 
   return (

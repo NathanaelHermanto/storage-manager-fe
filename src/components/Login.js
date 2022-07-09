@@ -33,7 +33,6 @@ const Login = ( {setToken} ) => {
             username,
             password
         });
-        console.log(typeof setToken)
         setToken(token);
       };
 

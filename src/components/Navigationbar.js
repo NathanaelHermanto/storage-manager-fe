@@ -74,7 +74,8 @@ const NavigationBar = () => {
     };
 
     return (
-        <AppBar position='static'>
+        <AppBar position='static' 
+            sx={{ backgroundColor:'#ffbdbd' }}>
             <Container maxWidth='xl'>
                     <Toolbar disableGutters>
                         <Typography
@@ -83,7 +84,7 @@ const NavigationBar = () => {
                             component="div"
                             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
                         >
-                            Storage Manager
+                            Warehouse App
                         </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -124,13 +125,14 @@ const NavigationBar = () => {
                             ))} 
                         </Menu>
                     </Box>
+                    
                     <Typography
                         variant="h10"
                         noWrap
                         component="div"
                         sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
                     >
-                        Storage Manager
+                        Warehouse App
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map(({page, path}) => (
