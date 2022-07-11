@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,6 +11,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const theme =  createTheme();
 
 const loginUser = async (credentials) => {
+
     return fetch('http://localhost:5001/api/items/login/', {
         method: 'POST',
         headers: {
@@ -22,7 +23,9 @@ const loginUser = async (credentials) => {
 }
 
 const Login = ( {setToken} ) => {
+  const [isLoading, setIsLoading] = useState(false);
     const handleSubmit = async (event) => {
+        setIsLoading(true);
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         
@@ -33,8 +36,8 @@ const Login = ( {setToken} ) => {
             username,
             password
         });
-        console.log(typeof setToken)
         setToken(token);
+        setIsLoading(false);
       };
 
       const LoginPage = () =>{
@@ -79,6 +82,7 @@ const Login = ( {setToken} ) => {
                   type="submit"
                   fullWidth
                   variant="contained"
+                  disabled={isLoading}
                   sx={{ mt: 3, mb: 2 }}
                 >
                   Sign In
