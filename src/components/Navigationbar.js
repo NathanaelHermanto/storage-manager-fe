@@ -16,7 +16,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 const pages = [
     { page: 'Home', path: '/' },
-    { page: 'Add/Update', path: '/create-or-update' },
+    { page: 'Add', path: '/create' },
     
   ];
 
