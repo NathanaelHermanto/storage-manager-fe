@@ -147,12 +147,13 @@ const NavigationBar = () => {
                     </Box>
 
                     <Search>
-                        <SearchIconWrapper>
-                        <SearchIcon />
+                        <SearchIconWrapper  sx={{cursor: 'pointer'}} onClick={() => {console.log('search')}}>
+                            <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
                         placeholder="Search…"
                         inputProps={{ 'aria-label': 'search' }}
+                        onKeyDown={(e) => {if(e.keyCode === 13 ) console.log('search')}}
                         />
                     </Search>
                 </Toolbar>

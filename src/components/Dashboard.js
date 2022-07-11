@@ -23,7 +23,6 @@ const Dashboard = () => {
     await fetch(`${BASE_URL}api/items/`)
       .then(response => response.json())
       .then((data) => {
-        console.log(data);
         setProducts(data);
         setIsLoading(false);
       })

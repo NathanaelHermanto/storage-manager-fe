@@ -1,8 +1,12 @@
-import React from 'react'
+import React from 'react';
+import NavigationBar from './Navigationbar';
 
 const CreateUpdate = () => {
   return (
-    <div>CreateUpdate</div>
+    <>
+      <NavigationBar/>
+      CreateUpdate
+    </>
   )
 }
 
