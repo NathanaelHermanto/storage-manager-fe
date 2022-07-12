@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, LinearProgress, Snackbar, Alert, Button, IconButton } from '@mui/material';
+import { Box, LinearProgress, Snackbar, Alert, Button } from '@mui/material';
 import { useParams } from "react-router-dom";
 import NavigationBar from './Navigationbar';
 import ProductCard from './cards/ProductCard';
@@ -30,7 +30,7 @@ const ProductView = () => {
     useEffect(() => {
         fetchProduct();
         // eslint-disable-next-line
-    }, []);
+    }, [productId]);
 
     const deleteProduct = async () => {
         await fetch(`${BASE_URL}api/items/id/${productId.id}`, { method: 'DELETE' })

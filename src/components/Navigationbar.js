@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import AppBar from '@mui/material/AppBar';
@@ -11,8 +12,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
+import { Snackbar, Alert } from '@mui/material';
 import { Link } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from '../const';
 
 const pages = [
     { page: 'Home', path: '/' },
@@ -60,10 +64,14 @@ color: 'inherit',
     },
 },
 }));
+
   
 
 const NavigationBar = () => {
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [inputValue, setInputValue] = useState('');
+    const [openAlert, setOpenAlert] = useState(false);
+    let navigate = useNavigate();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -73,7 +81,48 @@ const NavigationBar = () => {
         setAnchorElNav(null);
     };
 
+    const routeChange = (newPath) => {
+        let path = newPath;
+        navigate(path)
+    }
+
+    const fetchProductByName = async (product_name) => {
+        return fetch(`${BASE_URL}api/items/${product_name}`)
+        .then(response => response.json())
+        .catch((e) => {
+            setOpenAlert(true);
+            console.log(e);
+        })
+    }
+
+    const handleSearch = async (event) => {
+        if (event.keyCode !== 13 ) return;
+        event.preventDefault();
+        const data = await fetchProductByName(inputValue);
+
+        if (data === 'undefined' || data.msg === 'item not found') {
+            setOpenAlert(true);
+            return;
+        };
+
+        const productId = data[0]._id;
+        routeChange(`/product/${productId}`);
+    }
+
+    const onChange = (event) => {
+        setInputValue(event.target.value);
+    }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenAlert(false);
+      };
+
     return (
+        <>
         <AppBar position='static' 
             sx={{ backgroundColor:'#ffbdbd' }}>
             <Container maxWidth='xl'>
@@ -147,19 +196,30 @@ const NavigationBar = () => {
                     </Box>
 
                     <Search>
-                        <SearchIconWrapper  sx={{cursor: 'pointer'}} onClick={() => {console.log('search')}}>
+                        <SearchIconWrapper  sx={{cursor: 'pointer'}} >
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
                         placeholder="Search…"
                         inputProps={{ 'aria-label': 'search' }}
-                        onKeyDown={(e) => {if(e.keyCode === 13 ) console.log('search')}}
+                        value={inputValue}
+                        onKeyDown={handleSearch}
+                        onChange={onChange}
                         />
                     </Search>
                 </Toolbar>
             </Container>
         </AppBar>
+
+        <Snackbar open={openAlert} autoHideDuration={10000} onClose={handleClose}>
+            <Alert severity="error" sx={{ width: '100%' }} onClose={handleClose}>
+                Product not found!
+                <br/>
+                Please mind the upper and lowercase
+            </Alert>
+        </Snackbar>
+        </>
     )
 }
 
-export default NavigationBar
+export default NavigationBar;
