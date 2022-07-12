@@ -25,25 +25,33 @@ const pages = [
   ];
 
 const Search = styled('div')(({ theme }) => ({
+display: 'flex',
 position: 'relative',
 borderRadius: theme.shape.borderRadius,
 backgroundColor: alpha(theme.palette.common.white, 0.15),
 '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
 },
-marginLeft: 0,
-width: '100%',
-[theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-},
+// marginLeft: 0,
+"& :first-of-type": {
+    flexGrow: 1
+  },
+  width: "auto",
+  ".MuiInputBase-root": {
+    width: "100%"
+  }
+// width: '100%',
+// [theme.breakpoints.up('sm')]: {
+//     marginLeft: theme.spacing(1),
+//     width: 'auto',
+// },
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
-padding: theme.spacing(0, 2),
+padding: theme.spacing(1, 1, 1, 1),
 height: '100%',
-position: 'absolute',
-pointerEvents: 'none',
+// position: 'absolute',
+// pointerEvents: 'none',
 display: 'flex',
 alignItems: 'center',
 justifyContent: 'center',
@@ -52,8 +60,8 @@ justifyContent: 'center',
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
 color: 'inherit',
 '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    padding: theme.spacing(1, 0, 1, 0),
+    //paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('sm')]: {
@@ -95,9 +103,7 @@ const NavigationBar = () => {
         })
     }
 
-    const handleSearch = async (event) => {
-        if (event.keyCode !== 13 ) return;
-        event.preventDefault();
+    const search = async () => {
         const data = await fetchProductByName(inputValue);
 
         if (data === 'undefined' || data.msg === 'item not found') {
@@ -107,6 +113,13 @@ const NavigationBar = () => {
 
         const productId = data[0]._id;
         routeChange(`/product/${productId}`);
+    }
+
+    const handleSearch = async (event) => {
+        if (event.keyCode !== 13 ) return;
+        event.preventDefault();
+
+        await search();
     }
 
     const onChange = (event) => {
@@ -196,7 +209,7 @@ const NavigationBar = () => {
                     </Box>
 
                     <Search>
-                        <SearchIconWrapper  sx={{cursor: 'pointer'}} >
+                        <SearchIconWrapper  sx={{cursor: 'pointer'}} onClick={search}>
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
