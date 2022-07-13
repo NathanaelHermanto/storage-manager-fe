@@ -12,6 +12,7 @@ const ProductView = () => {
     const [deleted, setDeleted] = useState(false);
     const [openAlert, setOpenAlert] = useState(false);
     const [updated, setUpdated] = useState(false);
+    const [openUpdateAlert, setOpenUpdateAlert] = useState(false);
 
     const fetchProduct = async () => {
         setIsLoading(true);
@@ -51,6 +52,7 @@ const ProductView = () => {
     }
 
     const updateProduct = async (updateData) => {
+        setUpdated(false);
         const requestOptions = {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -61,6 +63,7 @@ const ProductView = () => {
         .then((data) => {
             setProduct(data[0]);
             setUpdated(true);
+            setOpenUpdateAlert(true);
         })
         .catch((e) => {
             setOpenAlert(true);
@@ -81,7 +84,7 @@ const ProductView = () => {
           return;
         }
     
-        setUpdated(false);
+        setOpenUpdateAlert(false);
       };
 
     
@@ -130,7 +133,7 @@ const ProductView = () => {
                             }
                         </Snackbar>
 
-                        <Snackbar open={updated} autoHideDuration={10000} onClose={handleCloseUpdated}>
+                        <Snackbar open={openUpdateAlert} autoHideDuration={10000} onClose={handleCloseUpdated}>
                             <Alert variant="outlined" severity="success" onClose={handleCloseUpdated}>
                                 Update successful
                             </Alert>
