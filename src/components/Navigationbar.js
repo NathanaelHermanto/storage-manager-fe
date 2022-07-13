@@ -32,7 +32,6 @@ backgroundColor: alpha(theme.palette.common.white, 0.15),
 '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
 },
-// marginLeft: 0,
 "& :first-of-type": {
     flexGrow: 1
   },
