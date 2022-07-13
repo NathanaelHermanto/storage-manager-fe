@@ -11,7 +11,6 @@ const ProductView = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [deleted, setDeleted] = useState(false);
     const [openAlert, setOpenAlert] = useState(false);
-    const [updated, setUpdated] = useState(false);
     const [openUpdateAlert, setOpenUpdateAlert] = useState(false);
 
     const fetchProduct = async () => {
@@ -32,7 +31,7 @@ const ProductView = () => {
     useEffect(() => {
         fetchProduct();
         // eslint-disable-next-line
-    }, [productId, updated]);
+    }, [productId]);
 
     const deleteProduct = async () => {
         await fetch(`${BASE_URL}api/items/id/${productId.id}`, { method: 'DELETE' })
@@ -52,7 +51,6 @@ const ProductView = () => {
     }
 
     const updateProduct = async (updateData) => {
-        setUpdated(false);
         const requestOptions = {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -61,8 +59,7 @@ const ProductView = () => {
         await fetch(`${BASE_URL}api/items/${product.name}`, requestOptions)
         .then(response => response.json())
         .then((data) => {
-            setProduct(data[0]);
-            setUpdated(true);
+            setProduct(data);
             setOpenUpdateAlert(true);
         })
         .catch((e) => {
