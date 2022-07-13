@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import AppBar from '@mui/material/AppBar';
@@ -11,35 +12,38 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
+import { Snackbar, Alert } from '@mui/material';
 import { Link } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from '../const';
 
 const pages = [
     { page: 'Home', path: '/' },
-    { page: 'Add/Update', path: '/create-or-update' },
+    { page: 'Add', path: '/create' },
     
   ];
 
 const Search = styled('div')(({ theme }) => ({
+display: 'flex',
 position: 'relative',
 borderRadius: theme.shape.borderRadius,
 backgroundColor: alpha(theme.palette.common.white, 0.15),
 '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
 },
-marginLeft: 0,
-width: '100%',
-[theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-},
+"& :first-of-type": {
+    flexGrow: 1
+  },
+  width: "auto",
+  ".MuiInputBase-root": {
+    width: "100%"
+  }
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
-padding: theme.spacing(0, 2),
+padding: theme.spacing(1, 1, 1, 1),
 height: '100%',
-position: 'absolute',
-pointerEvents: 'none',
 display: 'flex',
 alignItems: 'center',
 justifyContent: 'center',
@@ -48,8 +52,7 @@ justifyContent: 'center',
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
 color: 'inherit',
 '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    padding: theme.spacing(1, 0, 1, 0),
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('sm')]: {
@@ -60,10 +63,14 @@ color: 'inherit',
     },
 },
 }));
+
   
 
 const NavigationBar = () => {
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [inputValue, setInputValue] = useState('');
+    const [openAlert, setOpenAlert] = useState(false);
+    let navigate = useNavigate();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -73,7 +80,53 @@ const NavigationBar = () => {
         setAnchorElNav(null);
     };
 
+    const routeChange = (newPath) => {
+        let path = newPath;
+        navigate(path)
+    }
+
+    const fetchProductByName = async (product_name) => {
+        return fetch(`${BASE_URL}api/items/${product_name}`)
+        .then(response => response.json())
+        .catch((e) => {
+            setOpenAlert(true);
+            console.log(e);
+        })
+    }
+
+    const search = async () => {
+        const data = await fetchProductByName(inputValue);
+
+        if (data === 'undefined' || data.msg === 'item not found') {
+            setOpenAlert(true);
+            return;
+        };
+
+        const productId = data[0]._id;
+        routeChange(`/product/${productId}`);
+    }
+
+    const handleSearch = async (event) => {
+        if (event.keyCode !== 13 ) return;
+        event.preventDefault();
+
+        await search();
+    }
+
+    const onChange = (event) => {
+        setInputValue(event.target.value);
+    }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenAlert(false);
+      };
+
     return (
+        <>
         <AppBar position='static' 
             sx={{ backgroundColor:'#ffbdbd' }}>
             <Container maxWidth='xl'>
@@ -147,19 +200,30 @@ const NavigationBar = () => {
                     </Box>
 
                     <Search>
-                        <SearchIconWrapper  sx={{cursor: 'pointer'}} onClick={() => {console.log('search')}}>
+                        <SearchIconWrapper  sx={{cursor: 'pointer'}} onClick={search}>
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
                         placeholder="Search…"
                         inputProps={{ 'aria-label': 'search' }}
-                        onKeyDown={(e) => {if(e.keyCode === 13 ) console.log('search')}}
+                        value={inputValue}
+                        onKeyDown={handleSearch}
+                        onChange={onChange}
                         />
                     </Search>
                 </Toolbar>
             </Container>
         </AppBar>
+
+        <Snackbar open={openAlert} autoHideDuration={10000} onClose={handleClose}>
+            <Alert severity="error" sx={{ width: '100%' }} onClose={handleClose}>
+                Product not found!
+                <br/>
+                Please mind the upper and lowercase
+            </Alert>
+        </Snackbar>
+        </>
     )
 }
 
-export default NavigationBar
+export default NavigationBar;

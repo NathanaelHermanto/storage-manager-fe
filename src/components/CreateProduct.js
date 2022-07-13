@@ -1,13 +1,13 @@
 import React from 'react';
 import NavigationBar from './Navigationbar';
 
-const CreateUpdate = () => {
+const CreateProduct = () => {
   return (
     <>
       <NavigationBar/>
-      CreateUpdate
+      CreateProduct
     </>
   )
 }
 
-export default CreateUpdate
+export default CreateProduct;
